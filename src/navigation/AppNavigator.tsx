@@ -6,8 +6,8 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { useAuth } from '../context/AuthContext';
+import { BottomNav } from '../layout';
 import { LoginScreen } from '../screens/LoginScreen';
-import { HomeScreen } from '../screens/HomeScreen';
 import { SplashScreen } from '../screens/SplashScreen';
 import { useTheme } from '../theme';
 
@@ -16,7 +16,7 @@ type AuthStackParamList = {
 };
 
 type AppStackParamList = {
-  Home: undefined;
+  MainTabs: undefined;
 };
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
@@ -33,7 +33,7 @@ function AuthStackNavigator() {
 function AppStackNavigator() {
   return (
     <AppStack.Navigator screenOptions={{ headerShown: false }}>
-      <AppStack.Screen name="Home" component={HomeScreen} />
+      <AppStack.Screen name="MainTabs" component={BottomNav} />
     </AppStack.Navigator>
   );
 }
