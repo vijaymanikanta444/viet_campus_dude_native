@@ -1,32 +1,29 @@
-import { useEffect, useState } from 'react';
+import { Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { SplashScreen } from './src/layout';
-import { AppRouter } from './src/navigation';
 import { ThemeProvider } from './src/theme/index';
-import appConfig from './app.json';
+import { AuthProvider } from './src/context/AuthContext';
+import { AppNavigator } from './src/navigation';
 
 function App() {
-  const [isSplashVisible, setIsSplashVisible] = useState(true);
-
-  useEffect(() => {
-    const splashTimer = setTimeout(() => {
-      setIsSplashVisible(false);
-    }, 1200);
-
-    return () => clearTimeout(splashTimer);
-  }, []);
-
   return (
     <ThemeProvider>
       <SafeAreaProvider>
-        {isSplashVisible ? (
-          <SplashScreen appName={appConfig.displayName ?? appConfig.name} />
-        ) : (
-          <AppRouter />
-        )}
+        <AuthProvider>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+            <View style={styles.container}>
+              <AppNavigator />
+            </View>
+          </TouchableWithoutFeedback>
+        </AuthProvider>
       </SafeAreaProvider>
     </ThemeProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 export default App;

@@ -1,2 +1,3 @@
+export { AppNavigator } from './AppNavigator';
 export { AppRouter } from './AppRouter';
-export type { RootStackParamList } from './types';
+export type { RootStackParamList, MainTabParamList } from './types';
