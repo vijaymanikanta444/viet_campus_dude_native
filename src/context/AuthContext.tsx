@@ -12,6 +12,7 @@ import {
   loginWithCredentials,
   loginWithSSO,
   type AuthSession,
+  type UserProfile,
 } from '../services/authService';
 
 const AUTH_STORAGE_KEY = '@campus-dude/auth-session';
@@ -21,6 +22,7 @@ type AuthContextValue = {
   isLoading: boolean;
   isAuthenticated: boolean;
   userEmail: string | null;
+  userProfile: UserProfile | null;
   login: (email: string, password: string) => Promise<void>;
   loginWithSSO: () => Promise<void>;
   logout: () => Promise<void>;
@@ -46,6 +48,7 @@ function parseStoredSession(rawValue: string | null): AuthSession | null {
       return {
         token: 'legacy-session',
         email: null,
+        profile: null,
         isAuthenticated: true,
       };
     }
@@ -58,6 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -74,6 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         setIsAuthenticated(Boolean(session));
         setUserEmail(session?.email ?? null);
+        setUserProfile(session?.profile ?? null);
 
         const elapsed = Date.now() - startedAt;
         const remainingDelay = Math.max(0, MIN_SPLASH_DURATION_MS - elapsed);
@@ -103,6 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
     setIsAuthenticated(true);
     setUserEmail(session.email);
+    setUserProfile(session.profile);
   }, []);
 
   const handleSSOLogin = useCallback(async () => {
@@ -111,12 +117,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
     setIsAuthenticated(true);
     setUserEmail(session.email);
+    setUserProfile(session.profile);
   }, []);
 
   const logout = useCallback(async () => {
     await AsyncStorage.removeItem(AUTH_STORAGE_KEY);
     setIsAuthenticated(false);
     setUserEmail(null);
+    setUserProfile(null);
   }, []);
 
   return (
@@ -125,6 +133,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         isLoading,
         isAuthenticated,
         userEmail,
+        userProfile,
         login,
         loginWithSSO: handleSSOLogin,
         logout,

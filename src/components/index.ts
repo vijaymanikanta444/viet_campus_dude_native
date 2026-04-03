@@ -1,5 +1,9 @@
 export { BottomNav, Footer, Header } from '../layout';
 export { Icon } from './Icon';
+export { AlertCard } from './AlertCard';
+export { Carousel } from './Carousel';
+export { QuickActions } from './QuickActions';
+export { StatCard } from './StatCard';
 export { ThemedButton } from './ThemedButton';
 export { ThemedCard } from './ThemedCard';
 export { ThemedInput } from './ThemedInput';

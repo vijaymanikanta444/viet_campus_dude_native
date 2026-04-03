@@ -1,5 +1,11 @@
 import { ReactNode } from 'react';
-import { ScrollView, StyleProp, View, ViewStyle } from 'react-native';
+import {
+  RefreshControl,
+  ScrollView,
+  StyleProp,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useTheme } from '../../theme';
@@ -14,6 +20,8 @@ type SafeAreaScreenProps = {
   includeBottomInset?: boolean;
   topOffset?: number;
   bottomOffset?: number;
+  refreshing?: boolean;
+  onRefresh?: () => void;
 };
 
 export function SafeAreaScreen({
@@ -25,6 +33,8 @@ export function SafeAreaScreen({
   includeBottomInset = true,
   topOffset = 0,
   bottomOffset,
+  refreshing = false,
+  onRefresh,
 }: SafeAreaScreenProps) {
   const { theme } = useTheme();
   const insets = useSafeAreaInsets();
@@ -56,6 +66,19 @@ export function SafeAreaScreen({
           style={{ flex: 1 }}
           contentInsetAdjustmentBehavior="never"
           automaticallyAdjustContentInsets={false}
+          keyboardShouldPersistTaps="handled"
+          keyboardDismissMode="on-drag"
+          refreshControl={
+            onRefresh ? (
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                tintColor={theme.colors.primary}
+                title={refreshing ? 'Refreshing...' : 'Pull to refresh'}
+                titleColor={theme.colors.textMuted}
+              />
+            ) : undefined
+          }
           scrollIndicatorInsets={{
             top: insets.top,
             bottom: insets.bottom,

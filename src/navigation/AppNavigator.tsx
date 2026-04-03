@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useAuth } from '../context/AuthContext';
 import { BottomNav } from '../layout';
 import { LoginScreen } from '../screens/LoginScreen';
+import { PlaceholderDetailsScreen } from '../screens/PlaceholderDetailsScreen';
 import { SplashScreen } from '../screens/SplashScreen';
 import { useTheme } from '../theme';
 
@@ -17,6 +18,10 @@ type AuthStackParamList = {
 
 type AppStackParamList = {
   MainTabs: undefined;
+  PlaceholderDetails: {
+    title: string;
+    subtitle?: string;
+  };
 };
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
@@ -32,8 +37,17 @@ function AuthStackNavigator() {
 
 function AppStackNavigator() {
   return (
-    <AppStack.Navigator screenOptions={{ headerShown: false }}>
-      <AppStack.Screen name="MainTabs" component={BottomNav} />
+    <AppStack.Navigator>
+      <AppStack.Screen
+        name="MainTabs"
+        component={BottomNav}
+        options={{ headerShown: false }}
+      />
+      <AppStack.Screen
+        name="PlaceholderDetails"
+        component={PlaceholderDetailsScreen}
+        options={{ title: 'Details' }}
+      />
     </AppStack.Navigator>
   );
 }

@@ -1,20 +1,31 @@
-import { Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { ThemeProvider } from './src/theme/index';
 import { AuthProvider } from './src/context/AuthContext';
 import { AppNavigator } from './src/navigation';
+import { queryClient } from './src/api/queryClient';
+import { queryPersister, setupOnlineManager } from './src/api/offline';
+
+setupOnlineManager();
 
 function App() {
   return (
     <ThemeProvider>
       <SafeAreaProvider>
-        <AuthProvider>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <PersistQueryClientProvider
+          client={queryClient}
+          persistOptions={{
+            persister: queryPersister,
+            maxAge: 1000 * 60 * 60 * 24,
+          }}
+        >
+          <AuthProvider>
             <View style={styles.container}>
               <AppNavigator />
             </View>
-          </TouchableWithoutFeedback>
-        </AuthProvider>
+          </AuthProvider>
+        </PersistQueryClientProvider>
       </SafeAreaProvider>
     </ThemeProvider>
   );
