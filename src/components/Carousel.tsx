@@ -29,6 +29,15 @@ function CarouselBase({
   const flatListRef = useRef<FlatList<Banner>>(null);
   const [containerWidth, setContainerWidth] = useState(0);
   const [activeIndex, setActiveIndex] = useState(0);
+  const currentVirtualIndexRef = useRef(0);
+
+  const loopData = useMemo(() => {
+    if (data.length <= 1) {
+      return data;
+    }
+
+    return [data[data.length - 1], ...data, data[0]];
+  }, [data]);
 
   const bannerWidth = useMemo(
     () => Math.max(1, containerWidth * BANNER_WIDTH_FACTOR),
@@ -38,15 +47,28 @@ function CarouselBase({
   const bannerGap = theme.spacing.sm;
 
   useEffect(() => {
+    if (!containerWidth || data.length <= 1) {
+      currentVirtualIndexRef.current = 0;
+      return;
+    }
+
+    currentVirtualIndexRef.current = 1;
+    flatListRef.current?.scrollToIndex({
+      index: 1,
+      animated: false,
+    });
+  }, [containerWidth, data.length]);
+
+  useEffect(() => {
     if (data.length <= 1 || !containerWidth) {
       return;
     }
 
     const timer = setInterval(() => {
-      setActiveIndex(prev => {
-        const next = (prev + 1) % data.length;
-        flatListRef.current?.scrollToIndex({ index: next, animated: true });
-        return next;
+      const nextVirtualIndex = currentVirtualIndexRef.current + 1;
+      flatListRef.current?.scrollToIndex({
+        index: nextVirtualIndex,
+        animated: true,
       });
     }, autoScrollIntervalMs);
 
@@ -60,9 +82,36 @@ function CarouselBase({
       }
 
       const itemSpan = bannerWidth + bannerGap;
-      const index = Math.round(event.nativeEvent.contentOffset.x / itemSpan);
+      const virtualIndex = Math.round(
+        event.nativeEvent.contentOffset.x / itemSpan,
+      );
 
-      setActiveIndex(Math.max(0, Math.min(index, data.length - 1)));
+      if (data.length <= 1) {
+        currentVirtualIndexRef.current = virtualIndex;
+        setActiveIndex(Math.max(0, Math.min(virtualIndex, data.length - 1)));
+        return;
+      }
+
+      if (virtualIndex === 0) {
+        const resetIndex = data.length;
+        currentVirtualIndexRef.current = resetIndex;
+        flatListRef.current?.scrollToIndex({
+          index: resetIndex,
+          animated: false,
+        });
+        setActiveIndex(data.length - 1);
+        return;
+      }
+
+      if (virtualIndex === data.length + 1) {
+        currentVirtualIndexRef.current = 1;
+        flatListRef.current?.scrollToIndex({ index: 1, animated: false });
+        setActiveIndex(0);
+        return;
+      }
+
+      currentVirtualIndexRef.current = virtualIndex;
+      setActiveIndex(virtualIndex - 1);
     },
     [bannerGap, bannerWidth, data.length],
   );
@@ -93,7 +142,13 @@ function CarouselBase({
         <Image source={{ uri: item.imageUrl }} style={styles.bannerImage} />
       </Pressable>
     ),
-    [bannerGap, bannerWidth, onPressItem, theme.colors.border, theme.colors.surface],
+    [
+      bannerGap,
+      bannerWidth,
+      onPressItem,
+      theme.colors.border,
+      theme.colors.surface,
+    ],
   );
 
   return (
@@ -101,9 +156,9 @@ function CarouselBase({
       <FlatList
         ref={flatListRef}
         horizontal
-        data={data}
+        data={loopData}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
         showsHorizontalScrollIndicator={false}
         snapToInterval={bannerWidth + bannerGap}
         decelerationRate="fast"
@@ -117,8 +172,24 @@ function CarouselBase({
           const isActive = index === activeIndex;
 
           return (
-            <View
+            <Pressable
               key={item.id}
+              onPress={() => {
+                if (data.length <= 1) {
+                  currentVirtualIndexRef.current = index;
+                  flatListRef.current?.scrollToIndex({ index, animated: true });
+                  setActiveIndex(index);
+                  return;
+                }
+
+                const virtualIndex = index + 1;
+                currentVirtualIndexRef.current = virtualIndex;
+                flatListRef.current?.scrollToIndex({
+                  index: virtualIndex,
+                  animated: true,
+                });
+                setActiveIndex(index);
+              }}
               style={[
                 styles.dot,
                 {
