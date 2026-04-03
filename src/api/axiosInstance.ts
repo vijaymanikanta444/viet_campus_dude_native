@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 // API Response wrapper type for consistent formatting
@@ -10,7 +11,7 @@ export type ApiResponse<T = any> = {
 };
 
 // Create axios instance with default config
-const API_BASE_URL = 'https://api.example.com'; // Update with your API endpoint
+const API_BASE_URL = 'https://api.yourdomain.com/api/v1'; // Update with your API endpoint
 
 const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
@@ -33,6 +34,8 @@ axiosInstance.interceptors.request.use(
     // Add custom header example
     config.headers['X-Client'] = 'react-native-app';
     config.headers['X-App-Version'] = '1.0.0';
+    config.headers['X-Source'] = 'mobile-app';
+    config.headers['X-Platform'] = Platform.OS;
 
     return config;
   },

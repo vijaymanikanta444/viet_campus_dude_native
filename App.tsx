@@ -1,20 +1,22 @@
-import { Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { ThemeProvider } from './src/theme/index';
 import { AuthProvider } from './src/context/AuthContext';
 import { AppNavigator } from './src/navigation';
+import { queryClient } from './src/api/queryClient';
 
 function App() {
   return (
     <ThemeProvider>
       <SafeAreaProvider>
-        <AuthProvider>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
             <View style={styles.container}>
               <AppNavigator />
             </View>
-          </TouchableWithoutFeedback>
-        </AuthProvider>
+          </AuthProvider>
+        </QueryClientProvider>
       </SafeAreaProvider>
     </ThemeProvider>
   );
