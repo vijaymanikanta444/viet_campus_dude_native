@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, View } from 'react-native';
 
 import {
   ThemedButton,
@@ -11,6 +11,8 @@ import { useAuth } from '../context/AuthContext';
 import { useThemedStyles } from '../theme';
 import { Theme } from '../theme/theme';
 import { validateLoginForm } from '../utils/validation';
+
+const collegeLogo = require('../assets/icon-transparent.png');
 
 export function LoginScreen() {
   const styles = useThemedStyles(createStyles);
@@ -44,11 +46,19 @@ export function LoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <View style={styles.inner}>
+        <View style={styles.branding}>
+          <Image
+            source={collegeLogo}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+        </View>
+
         <ThemedText variant="title" style={styles.title}>
           Welcome Back
         </ThemedText>
         <ThemedText variant="body" color="textMuted" style={styles.subtitle}>
-          Sign in with your VIET email to continue.
+          Sign in to continue with your college.
         </ThemedText>
 
         <ThemedCard>
@@ -106,10 +116,6 @@ export function LoginScreen() {
             />
           </View>
         </ThemedCard>
-
-        <ThemedText variant="caption" color="textMuted" style={styles.helper}>
-          SSO is reserved for future SAML/OAuth integration.
-        </ThemedText>
       </View>
     </KeyboardAvoidingView>
   );
@@ -126,6 +132,13 @@ const createStyles = (theme: Theme) => ({
     paddingTop: theme.spacing.xl,
     gap: theme.spacing.lg,
     justifyContent: 'center' as const,
+  },
+  branding: {
+    alignItems: 'center' as const,
+  },
+  logo: {
+    width: 120,
+    height: 120,
   },
   title: {
     textAlign: 'center' as const,
