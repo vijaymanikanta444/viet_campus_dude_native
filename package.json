@@ -1,6 +1,6 @@
 {
   "name": "campus-dude",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "CLI to configure and bootstrap a React Native app template for VIET projects",
   "organization": {
     "name": "VISAKHA INSTITUTE OF ENGINEERING & TECHNOLOGY",
