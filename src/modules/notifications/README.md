@@ -5,7 +5,7 @@ This module is intentionally isolated from the app flow.
 Current state:
 
 - Firebase Messaging adapter is implemented in this module.
-- No screens or navigators import this module yet.
+- App bootstrap in `App.tsx` initializes notifications and reads the token.
 - Background handler can be registered from app entrypoint (`index.js`).
 
 Integration points:
