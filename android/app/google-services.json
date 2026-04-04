@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "316664607861",
+    "project_id": "viet-campus-dude",
+    "storage_bucket": "viet-campus-dude.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316664607861:android:537c38e91bb14bf58df43c",
+        "android_client_info": {
+          "package_name": "com.viet.campusdude"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTQ64aNM0YC74u1O6EbI-cKnDGzOkznk8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
