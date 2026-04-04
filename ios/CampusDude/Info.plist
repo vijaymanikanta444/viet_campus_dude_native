@@ -46,10 +46,6 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We use your location while the app is open to show campus-specific services, events, and information for VIET campus</string>
-	<key>NSFaceIDUsageDescription</key>
-	<string>Campus Dude uses Face ID to securely unlock the app with your biometric</string>
-	<key>NSBiometricsUsageDescription</key>
-	<string>Campus Dude uses biometric authentication to securely unlock the app</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
