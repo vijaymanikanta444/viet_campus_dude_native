@@ -1,5 +1,7 @@
-import { useMemo } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useEffect, useMemo, useState } from 'react';
+import { Alert, Platform, Pressable, StyleSheet, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
@@ -15,12 +17,18 @@ type SectionRowProps = {
   label: string;
   value?: string;
   isLast?: boolean;
+  onPress?: () => void;
 };
 
-function SectionRow({ label, value, isLast = false }: SectionRowProps) {
+function SectionRow({
+  label,
+  value,
+  isLast = false,
+  onPress,
+}: SectionRowProps) {
   return (
     <Pressable
-      onPress={() => console.log(`Pressed: ${label}`)}
+      onPress={onPress ?? (() => console.log(`Pressed: ${label}`))}
       style={[stylesStatic.row, !isLast && stylesStatic.rowBorder]}
     >
       <ThemedText variant="body" style={stylesStatic.rowLabel}>
@@ -49,6 +57,117 @@ export function ProfileScreen() {
     useNavigation<
       NativeStackNavigationProp<ProfileStackParamList, 'ProfileHome'>
     >();
+
+  const [isBiometricAvailable, setIsBiometricAvailable] = useState(false);
+  const [biometricType, setBiometricType] = useState<string>('');
+  const [isBiometricEnabled, setIsBiometricEnabled] = useState(false);
+
+  // Check biometric availability on mount
+  useEffect(() => {
+    const checkBiometrics = async () => {
+      try {
+        const biometrics = new ReactNativeBiometrics();
+        const { available, biometryType } =
+          await biometrics.isSensorAvailable();
+
+        setIsBiometricAvailable(available);
+
+        if (biometryType === BiometryTypes.FaceID) {
+          setBiometricType('Face ID');
+        } else if (biometryType === BiometryTypes.TouchID) {
+          setBiometricType('Touch ID');
+        } else if (biometryType === BiometryTypes.Biometrics) {
+          // On Android, could be fingerprint, face, or both
+          setBiometricType(
+            Platform.OS === 'ios' ? 'Touch ID' : 'Face / Fingerprint',
+          );
+        }
+
+        // Check if biometric unlock is enabled
+        const enabled = await AsyncStorage.getItem('biometric_unlock_enabled');
+        setIsBiometricEnabled(enabled === 'true');
+      } catch (error) {
+        console.log('Error checking biometrics:', error);
+      }
+    };
+
+    checkBiometrics();
+  }, []);
+
+  const handleBiometricPress = async () => {
+    try {
+      if (!isBiometricAvailable) {
+        Alert.alert(
+          'Biometric Not Available',
+          'This device does not support biometric authentication.',
+        );
+        return;
+      }
+
+      if (isBiometricEnabled) {
+        // Disable biometric
+        Alert.alert(
+          'Disable Biometric Unlock',
+          'Are you sure you want to disable biometric unlock?',
+          [
+            { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+            {
+              text: 'Disable',
+              onPress: async () => {
+                try {
+                  await AsyncStorage.setItem(
+                    'biometric_unlock_enabled',
+                    'false',
+                  );
+                  setIsBiometricEnabled(false);
+                  Alert.alert('Success', 'Biometric unlock disabled.');
+                } catch (e) {
+                  Alert.alert('Error', 'Failed to save preference.');
+                  console.log('Error disabling biometric:', e);
+                }
+              },
+              style: 'destructive',
+            },
+          ],
+        );
+      } else {
+        // Enable biometric - show authentication prompt
+        try {
+          const biometrics = new ReactNativeBiometrics();
+
+          const { success } = await biometrics
+            .simplePrompt({
+              promptMessage: 'Authenticate to enable biometric unlock',
+              fallbackPromptMessage: 'Use passcode',
+            })
+            .catch(err => {
+              console.log('Biometric prompt error:', err);
+              return { success: false };
+            });
+
+          if (success) {
+            await AsyncStorage.setItem('biometric_unlock_enabled', 'true');
+            setIsBiometricEnabled(true);
+            Alert.alert(
+              'Success',
+              'Biometric unlock enabled. You can now unlock the app with your biometric.',
+            );
+          } else {
+            Alert.alert(
+              'Failed',
+              'Biometric authentication was cancelled or failed.',
+            );
+          }
+        } catch (error) {
+          console.log('Error in biometric authentication:', error);
+          Alert.alert('Error', 'An error occurred. Please try again.');
+        }
+      }
+    } catch (error) {
+      console.log('Unexpected error:', error);
+      Alert.alert('Error', 'An unexpected error occurred.');
+    }
+  };
 
   const displayName = useMemo(
     () => getDisplayName(userProfile, userEmail),
@@ -86,6 +205,16 @@ export function ProfileScreen() {
       }),
     [],
   );
+
+  const biometricLabel = useMemo(() => {
+    if (!isBiometricAvailable) {
+      return 'Not Available';
+    }
+    if (Platform.OS === 'ios') {
+      return 'Face ID / Touch ID';
+    }
+    return 'Fingerprint';
+  }, [isBiometricAvailable]);
 
   return (
     <SafeAreaScreen style={styles.container} scrollable>
@@ -175,8 +304,17 @@ export function ProfileScreen() {
             General Settings
           </ThemedText>
           <ThemedCard style={styles.sectionCard}>
-            <SectionRow label="Face ID" value="On" />
-            <SectionRow label="Location Permissions" />
+            <SectionRow
+              label="Biometric"
+              value={
+                isBiometricAvailable
+                  ? isBiometricEnabled
+                    ? 'On'
+                    : 'Off'
+                  : 'Not Available'
+              }
+              onPress={handleBiometricPress}
+            />
             <SectionRow label="Notifications" value="On" isLast />
           </ThemedCard>
         </View>
