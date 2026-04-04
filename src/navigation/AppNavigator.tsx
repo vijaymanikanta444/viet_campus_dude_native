@@ -77,7 +77,8 @@ export function AppNavigator() {
 
   const overlayStyles = useMemo(
     () => ({
-      background: theme.mode === 'dark' ? 'rgba(0, 0, 0, 0.72)' : 'rgba(0, 0, 0, 0.45)',
+      background:
+        theme.mode === 'dark' ? 'rgba(0, 0, 0, 0.72)' : 'rgba(0, 0, 0, 0.45)',
       cardBg: theme.colors.surface,
       title: theme.colors.textPrimary,
       subtitle: theme.colors.textMuted,
@@ -189,19 +190,43 @@ export function AppNavigator() {
         {isAuthenticated ? <AppStackNavigator /> : <AuthStackNavigator />}
 
         {isAuthenticated && isLocked ? (
-          <View style={[styles.lockOverlay, { backgroundColor: overlayStyles.background }]}>
-            <View style={[styles.lockCard, { backgroundColor: overlayStyles.cardBg }]}>
-              <Text style={[styles.lockTitle, { color: overlayStyles.title }]}>App Locked</Text>
-              <Text style={[styles.lockSubtitle, { color: overlayStyles.subtitle }]}>
+          <View
+            style={[
+              styles.lockOverlay,
+              { backgroundColor: overlayStyles.background },
+            ]}
+          >
+            <View
+              style={[
+                styles.lockCard,
+                { backgroundColor: overlayStyles.cardBg },
+              ]}
+            >
+              <Text style={[styles.lockTitle, { color: overlayStyles.title }]}>
+                App Locked
+              </Text>
+              <Text
+                style={[styles.lockSubtitle, { color: overlayStyles.subtitle }]}
+              >
                 Use Face ID, Touch ID, or device biometrics to continue.
               </Text>
               <Pressable
                 onPress={() => {
                   void authenticateAndUnlock();
                 }}
-                style={[styles.unlockButton, { backgroundColor: overlayStyles.buttonBg }]}
+                style={[
+                  styles.unlockButton,
+                  { backgroundColor: overlayStyles.buttonBg },
+                ]}
               >
-                <Text style={[styles.unlockButtonText, { color: overlayStyles.buttonText }]}>Unlock</Text>
+                <Text
+                  style={[
+                    styles.unlockButtonText,
+                    { color: overlayStyles.buttonText },
+                  ]}
+                >
+                  Unlock
+                </Text>
               </Pressable>
             </View>
           </View>
