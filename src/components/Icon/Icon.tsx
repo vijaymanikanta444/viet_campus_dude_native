@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 
 import CalendarFilledIcon from '../../assets/icons/calendar-filled.svg';
 import CalendarOutlineIcon from '../../assets/icons/calendar.svg';
+import ChevronRightIcon from '../../assets/icons/chevron-right.svg';
 import DashboardFilledIcon from '../../assets/icons/dashboard-filled.svg';
 import DashboardOutlineIcon from '../../assets/icons/dashboard.svg';
 import HomeFilledIcon from '../../assets/icons/home-filled.svg';
@@ -14,6 +15,10 @@ const iconMap = {
   calendar: {
     filled: CalendarFilledIcon,
     outline: CalendarOutlineIcon,
+  },
+  'chevron-right': {
+    filled: ChevronRightIcon,
+    outline: ChevronRightIcon,
   },
   dashboard: {
     filled: DashboardFilledIcon,

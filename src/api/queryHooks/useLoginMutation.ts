@@ -21,7 +21,7 @@ const buildExampleSession = (email: string, password: string): AuthSession => {
     : 'Student';
   const lastName = lastNamePart
     ? lastNamePart.charAt(0).toUpperCase() + lastNamePart.slice(1)
-    : 'User';
+    : '';
 
   return {
     token: `viet-${Date.now()}-${normalizedEmail.length + password.length}`,

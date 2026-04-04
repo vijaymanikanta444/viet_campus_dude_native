@@ -277,7 +277,7 @@ export function HomeScreen() {
           <ThemedText variant="body" style={styles.sectionTitle}>
             Important Alerts
           </ThemedText>
-          {alerts.map(alertItem => (
+          {alerts.map((alertItem: AlertItem) => (
             <AlertCard key={alertItem.id} message={alertItem.message} />
           ))}
         </View>

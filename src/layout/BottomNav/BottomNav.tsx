@@ -5,10 +5,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icon } from '../../components/Icon/Icon';
 import { HomeScreen } from '../../screens/HomeScreen';
 import { EventsScreen } from '../../screens/EventsScreen';
-import { ProfileScreen } from '../../screens/ProfileScreen';
 import { AppsScreen } from '../../screens/AppsScreen';
 import { useTheme } from '../../theme';
 import { MainTabParamList } from '../../navigation/types';
+import { ProfileStackNavigator } from '../../navigation/ProfileStackNavigator';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
@@ -83,7 +83,7 @@ export function BottomNav() {
       />
       <Tab.Screen
         name="ProfileTab"
-        component={ProfileScreen}
+        component={ProfileStackNavigator}
         options={{
           tabBarLabel: 'Profile',
         }}
