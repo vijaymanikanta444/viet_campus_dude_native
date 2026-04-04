@@ -7,16 +7,18 @@ export type ProfileSectionItem = {
 };
 
 export type ProfileStackParamList = {
-  ProfileHome: undefined;
+  Profile: undefined;
   ProfileSection: {
     title: string;
     subtitle?: string;
     items: ProfileSectionItem[];
   };
+  PrivacyPolicy: undefined;
+  HelpSupport: undefined;
 };
 
 export type RootStackParamList = {
-  MainTabs: NavigatorScreenParams<MainTabParamList> | undefined;
+  Home: NavigatorScreenParams<MainTabParamList> | undefined;
 };
 
 export type MainTabParamList = {

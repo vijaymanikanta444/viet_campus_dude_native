@@ -13,11 +13,15 @@ import { getDisplayName } from '../services/api';
 import { useThemedStyles } from '../theme';
 import { Theme } from '../theme/theme';
 
+const APP_VERSION =
+  (require('../../package.json') as { version?: string }).version ?? 'Unknown';
+
 type SectionRowProps = {
   label: string;
   value?: string;
   isLast?: boolean;
   onPress?: () => void;
+  showChevron?: boolean;
 };
 
 function SectionRow({
@@ -25,6 +29,7 @@ function SectionRow({
   value,
   isLast = false,
   onPress,
+  showChevron = true,
 }: SectionRowProps) {
   return (
     <Pressable
@@ -44,7 +49,7 @@ function SectionRow({
             {value}
           </ThemedText>
         ) : null}
-        <Icon name="chevron-right" size={20} />
+        {showChevron ? <Icon name="chevron-right" size={20} /> : null}
       </View>
     </Pressable>
   );
@@ -55,7 +60,7 @@ export function ProfileScreen() {
   const { userEmail, userProfile, logout } = useAuth();
   const navigation =
     useNavigation<
-      NativeStackNavigationProp<ProfileStackParamList, 'ProfileHome'>
+      NativeStackNavigationProp<ProfileStackParamList, 'Profile'>
     >();
 
   const [isBiometricAvailable, setIsBiometricAvailable] = useState(false);
@@ -335,9 +340,20 @@ export function ProfileScreen() {
             About The App
           </ThemedText>
           <ThemedCard style={styles.sectionCard}>
-            <SectionRow label="Version" value="0.0.3" />
-            <SectionRow label="Privacy Policy" />
-            <SectionRow label="Help & Support" isLast />
+            <SectionRow
+              label="Version"
+              value={APP_VERSION}
+              showChevron={false}
+            />
+            <SectionRow
+              label="Privacy Policy"
+              onPress={() => navigation.navigate('PrivacyPolicy')}
+            />
+            <SectionRow
+              label="Help & Support"
+              isLast
+              onPress={() => navigation.navigate('HelpSupport')}
+            />
           </ThemedCard>
         </View>
 

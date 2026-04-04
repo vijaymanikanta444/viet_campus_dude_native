@@ -1,5 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { HelpSupportScreen } from '../screens/HelpSupportScreen';
+import { PrivacyPolicyScreen } from '../screens/PrivacyPolicyScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { ProfileSectionScreen } from '../screens/ProfileSectionScreen';
 import type { ProfileStackParamList } from './types';
@@ -24,7 +26,7 @@ export function ProfileStackNavigator() {
       }}
     >
       <Stack.Screen
-        name="ProfileHome"
+        name="Profile"
         component={ProfileScreen}
         options={{ headerShown: false }}
       />
@@ -34,6 +36,20 @@ export function ProfileStackNavigator() {
         options={({ route }) => ({
           title: route.params.title,
         })}
+      />
+      <Stack.Screen
+        name="PrivacyPolicy"
+        component={PrivacyPolicyScreen}
+        options={{
+          title: 'Privacy Policy',
+        }}
+      />
+      <Stack.Screen
+        name="HelpSupport"
+        component={HelpSupportScreen}
+        options={{
+          title: 'Help & Support',
+        }}
       />
     </Stack.Navigator>
   );

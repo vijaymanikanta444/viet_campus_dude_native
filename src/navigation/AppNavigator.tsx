@@ -30,7 +30,7 @@ type AuthStackParamList = {
 };
 
 type AppStackParamList = {
-  MainTabs: undefined;
+  Home: undefined;
   PlaceholderDetails: {
     title: string;
     subtitle?: string;
@@ -52,7 +52,7 @@ function AppStackNavigator() {
   return (
     <AppStack.Navigator>
       <AppStack.Screen
-        name="MainTabs"
+        name="Home"
         component={BottomNav}
         options={{ headerShown: false }}
       />

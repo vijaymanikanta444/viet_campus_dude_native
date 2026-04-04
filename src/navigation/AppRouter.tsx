@@ -51,7 +51,7 @@ const linking: LinkingOptions<RootStackParamList> = {
   prefixes: ['campusdude://'],
   config: {
     screens: {
-      MainTabs: {
+      Home: {
         screens: {
           HomeTab: 'home',
           EventsTab: 'events',
@@ -105,7 +105,7 @@ export function AppRouter() {
 
       if (tab && navigationRef.isReady()) {
         console.log('[Deep Link] Navigating to tab:', tab);
-        navigationRef.navigate('MainTabs', {
+        navigationRef.navigate('Home', {
           screen: tab as any,
         });
       } else {
@@ -151,7 +151,7 @@ export function AppRouter() {
         }}
       >
         <Stack.Screen
-          name="MainTabs"
+          name="Home"
           component={BottomNav}
           options={{
             headerShown: false,
