@@ -274,7 +274,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.viet.campusdude;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.viet.campusdude;
 				PRODUCT_NAME = CampusDude;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -305,7 +305,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.viet.campusdude;
 				"PRODUCT_BUNDLE_IDENTIFIER[sdk=iphoneos*]" = com.viet.campusdude;
 				PRODUCT_NAME = CampusDude;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
